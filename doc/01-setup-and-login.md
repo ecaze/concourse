@@ -33,10 +33,46 @@ concourse-ciにはいくつかセットアップの方法があるが、ここ�
    
    鍵の生成、及びそれらの配置については、[generate-keys.sh](https://github.com/concourse/concourse-docker/blob/master/generate-keys.sh)を実行することで準備可能。
    
-   (Windowsの場合は、git bashや、[OpenSSH](https://github.com/PowerShell/Win32-OpenSSH/releases)なんかを介するとできる。ただ試したところOpenSSHの方はパスフレーズなしのキー生成ができなさそう？なのでおとなしくgit bashを使うのが吉。) 
+   (Windowsの場合は、git bashや、[OpenSSH](https://github.com/PowerShell/Win32-OpenSSH/releases)を介することで実行可能。ただ試したところOpenSSHの方はパスフレーズなしのキー生成ができなさそう？なのでおとなしくgit bashを使うのが吉。) 
 3. ```docker-compose up -d``` を実行する。
 
-ここまでで、concourse-ciの立ち上げは完了。
+これで、concourse-ciの立ち上げは完了。
 
+---
+
+次に、concourse-ciをCLI上で扱うためのツールをセットアップする。
+
+1. [http://127.0.0.1:8080](http://127.0.0.1:8080)をブラウザで開く
+2. 正常にconcourse-ciが起動していれば、以下のような画面が表示される。
+3. 利用しているOSに合わせて、**fly(CLI Tool)** をダウンロードする。
+4. パスの通っているフォルダに```fly```バイナリを配置する or ```fly```バイナリがあるフォルダにパスを通す。
+
+これで、concourse-ciをCLI上から扱う```fly```の導入が完了。
+
+きちんと```fly```が実行可能かどうか、```fly --version```などを実行することで確認しておくこと。
 
 # login
+
+次に立ち上がったconcourse-ciにログインする。
+
+concourse-ciを利用する上で、Webインターフェース上はもとより、CLIツールにおいてもログイン処理が必要となる。
+
+## Web インターフェース
+
+1. [http://127.0.0.1:8080](http://127.0.0.1:8080)をブラウザで開く
+2. 右上のloginをクリックする。
+3. username/passwordを入力する（今回利用しているdocker-composeファイルではtest/testユーザが設定されている）
+
+## CLI
+
+1. コマンドラインから ```fly --target concourse-memo login --concourse-url http://127.0.0.1:8080 -u test -p test```と実行する。
+    
+    <detail><summary>shorthand</summary><div>
+    
+    ```fly -t concourse-memo login -c http://127.0.0.1:8080 -u test -p test```
+    
+    </div></detail>
+    
+CLI上で操作する場合、自身が今ログイン済みかどうかを確認したい場合がある。
+
+その場合は、 ```fly -t concourse-memo status```を実行するとログイン済みかどうか確認できる。
